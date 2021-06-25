@@ -25,7 +25,7 @@ Bento Bundle are
 
 
 ## Tasks
-[ ] Write down the steps to deploy Lambda function
-[ ] Create a bento with multiple api functions and setup CF config for that
-[ ] checkout aws sam cli and see can it be used for deployment
-[ ] investigate image config on cf template. and allow it to set run_command on the template rather than in entry.sh.  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-imageconfig
+- [x] Write down the steps to deploy Lambda function
+- [ ] Create a bento with multiple api functions and setup CF config for that 
+- [ ] checkout aws sam cli and see can it be used for deployment
+- [ ] investigate image config on cf template. and allow it to set run_command on the template rather than in entry.sh.  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-imageconfig

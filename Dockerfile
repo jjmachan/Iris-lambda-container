@@ -42,11 +42,11 @@ COPY --chown=bentoml:bentoml . ./
 EXPOSE 5000
 
 # Setup AWS Lambda
-ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
-COPY entry.sh /
-RUN chmod +x /usr/bin/aws-lambda-rie /entry.sh
+ADD --chown=bentoml:bentoml https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie ./aws-lambda-rie
+COPY --chown=bentoml:bentoml entry.sh ./
+USER bentoml
+RUN chmod +x ./aws-lambda-rie ./entry.sh
 ENV BENTOML_CONFIG=$BUNDLE_PATH/config.yml
 
-RUN chmod +x ./docker-entrypoint.sh
-ENTRYPOINT [ "/entry.sh" ]
+ENTRYPOINT [ "./entry.sh" ]
 CMD ["app.test"]

@@ -18,8 +18,10 @@ Bento Bundle are
    ```bash
    docker build . -t iris_classifier:latest
    docker run -p 9000:8080 iris_classifier
+   
    # to test the endpoints
    curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"body": "[[1, 2, 2, 3]]"}'
+   
    #Login, Tag and Push to ECR
    aws ecr get-login-password | docker login --username AWS --password-stdin 213386773652.dkr.ecr.ap-south-1.amazonaws.com
    docker tag iris_classifier 213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier

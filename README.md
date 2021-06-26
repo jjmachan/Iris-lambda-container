@@ -15,6 +15,19 @@ Bento Bundle are
 3. Build the image. With all these changes, the service is ready to run on
    Lambda, tag and push the docker image into ECR. 
 
+   ```
+   docker build . -t iris_classifier:latest
+   docker run -p 9000:8080 iris_classifier
+
+   # to test the endpoints
+  curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"body": "[[1, 2, 2, 3]]"}'
+
+   # Login, Tag and Push to ECR
+   aws ecr get-login-password | docker login --username AWS --password-stdin 213386773652.dkr.ecr.ap-south-1.amazonaws.com
+   docker tag iris_classifier 213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier
+   docker push 213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier
+   ```
+
 4. Build Cloudformation template. We have to create the template that we will
    use to build infrastructure in AWS (API gateway for all the endpoints and
    Lambda functions). 
@@ -22,6 +35,13 @@ Bento Bundle are
    Right now, I'm using a custom template file. *TODO* Check out AWS SAM Cli and
    creation of endpoints and template files using that (this is what is
    currently used in bentoml lambda deployment).
+
+   ```
+   aws cloudformation deploy \
+    --stack-name lambda-api \
+    --template-file lambda2.yml \
+    --capabilities CAPABILITY_IAM
+   ```
 
 
 ## Tasks

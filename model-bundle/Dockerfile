@@ -49,4 +49,3 @@ RUN chmod +x ./aws-lambda-rie ./entry.sh
 ENV BENTOML_CONFIG=$BUNDLE_PATH/config.yml
 
 ENTRYPOINT [ "./entry.sh" ]
-CMD ["app.test"]

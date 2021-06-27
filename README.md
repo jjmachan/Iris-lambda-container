@@ -49,3 +49,8 @@ Bento Bundle are
 - [ ] Create a bento with multiple api functions and setup CF config for that 
 - [ ] checkout aws sam cli and see can it be used for deployment
 - [ ] investigate image config on cf template. and allow it to set run_command on the template rather than in entry.sh.  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-imageconfig
+
+
+## Resources
+- [Lambda Container Images](https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/)
+- [Setting up API Gateways for Lambda](https://nickolaskraus.org/articles/creating-an-amazon-api-gateway-with-a-lambda-integration-using-cloudformation/)

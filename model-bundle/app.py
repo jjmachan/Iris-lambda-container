@@ -6,7 +6,7 @@ import sys
 
 # bento_name = os.environ['BENTOML_BENTO_SERVICE_NAME']
 # api_name = os.environ["BENTOML_API_NAME"]
-api_name = 'predict'
+api_name = os.environ["BENTOML_API_NAME"]
 
 
 print('loading app: ', api_name)

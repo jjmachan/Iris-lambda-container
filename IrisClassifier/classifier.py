@@ -20,3 +20,11 @@ class IrisClassifier(BentoService):
         inference API function input
         """
         return self.artifacts.model.predict(df)
+
+    @api(input=DataframeInput(), batch=True)
+    def nextpredict(self, df: pd.DataFrame):
+        """
+        Another function to have 2 API endpoints.
+        TODO: try out other InputHandlers and Models too.
+        """
+        return self.artifacts.model.predict(df)

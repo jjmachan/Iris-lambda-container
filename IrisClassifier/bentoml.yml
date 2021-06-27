@@ -1,9 +1,9 @@
 version: 0.12.1
 kind: BentoService
 metadata:
-  created_at: 2021-06-21 18:38:31.855323
+  created_at: 2021-06-27 04:50:37.284996
   service_name: IrisClassifier
-  service_version: 20210622000830_49A2A3
+  service_version: 20210627102035_435C44
   module_name: classifier
   module_file: classifier.py
 env:
@@ -17,6 +17,19 @@ env:
   python_version: 3.8.10
   docker_base_image: bentoml/model-server:0.12.1-py38
 apis:
+- name: nextpredict
+  docs: "\n        Another function to have 2 API endpoints.\n        TODO: try out\
+    \ other InputHandlers and Models too.\n        "
+  input_type: DataframeInput
+  output_type: DefaultOutput
+  mb_max_batch_size: 4000
+  mb_max_latency: 20000
+  batch: true
+  route: nextpredict
+  input_config:
+    orient:
+    typ: frame
+    dtype:
 - name: predict
   docs: "\n        An inference API named `predict` with Dataframe input adapter,\
     \ which codifies\n        how HTTP requests or CSV files are converted to a pandas\

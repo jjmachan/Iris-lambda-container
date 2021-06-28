@@ -2,6 +2,7 @@ from bentoml.saved_bundle import load_from_dir
 import os
 from pathlib import Path
 from bentoml.utils.ruamel_yaml import YAML
+from utils import call_sam_command
 
 
 def _create_aws_lambda_cloudformation_template_file(
@@ -80,6 +81,7 @@ if __name__ == "__main__":
     ecr_image_uri = (
         "213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier:latest"
     )
+    aws_region = 'ap-south-1'
     print(api_names)
 
     template_file_path = _create_aws_lambda_cloudformation_template_file(
@@ -90,3 +92,26 @@ if __name__ == "__main__":
         memory_size=500,
         timeout=60,
     )
+    print("SAM Template file generated at ", template_file_path)
+    return_code, stdout, stderr = call_sam_command(
+        [
+            "deploy",
+            "-t",
+            template_file_path.split('/')[-1],
+            "--stack-name",
+            "iris-classifier",
+            "--image-repository",
+            ecr_image_uri,
+            "--capabilities",
+            "CAPABILITY_IAM",
+            "--region",
+            aws_region,
+            "--no-confirm-changeset"
+        ],
+        project_dir="./model-bundle",
+        region=aws_region
+    )
+    if return_code != 0:
+        print(return_code, stdout, stderr)
+    else:
+        print('Upload success!')

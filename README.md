@@ -54,3 +54,4 @@ Bento Bundle are
 ## Resources
 - [Lambda Container Images](https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/)
 - [Setting up API Gateways for Lambda](https://nickolaskraus.org/articles/creating-an-amazon-api-gateway-with-a-lambda-integration-using-cloudformation/)
+- [Deploying custom Docker Image with SAM](https://github.com/philschmid/aws-lambda-with-docker-image)

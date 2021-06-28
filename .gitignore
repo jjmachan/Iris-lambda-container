@@ -1,0 +1,3 @@
+__pycache__/
+model-bundle/samconfig.toml
+model-bundle/template.yaml

@@ -1,8 +1,17 @@
-from bentoml.saved_bundle import load_from_dir
 import os
 from pathlib import Path
+import sys
+
 from bentoml.utils.ruamel_yaml import YAML
-from utils import call_sam_command
+from bentoml.saved_bundle import load_from_dir
+from utils import (
+    call_sam_command,
+    create_ecr_repository_if_not_exists,
+    get_ecr_login_info,
+    generate_docker_image_tag,
+    build_docker_image,
+    push_docker_image_to_repository
+)
 
 
 def _create_aws_lambda_cloudformation_template_file(
@@ -76,19 +85,35 @@ amazonaws.com/Prod"
 
 
 if __name__ == "__main__":
-    bentobundle = load_from_dir("./model-bundle/")
-    api_names = [api.name for api in bentobundle.inference_apis]
-    ecr_image_uri = (
-        "213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier:latest"
-    )
-    aws_region = 'ap-south-1'
-    print(api_names)
+    if len(sys.argv) < 2:
+        raise Exception("Please provide Bundle path")
+    bundle_path = sys.argv[1]
 
+    bentobundle = load_from_dir(bundle_path)
+    aws_region = "ap-south-1"
+    model_repo_name = "irisclassifier"
+
+    # Build and Push docker image
+    registry_id, registry_uri = create_ecr_repository_if_not_exists(
+        aws_region, model_repo_name
+    )
+    registry_url, username, password = get_ecr_login_info(aws_region, registry_id)
+    image_tag = generate_docker_image_tag(registry_uri, "irisclassifier", "")
+    print('Building Image...')
+    build_docker_image(
+        context_path=bundle_path,
+        image_tag=image_tag,
+    )
+    print('Pushing Image...')
+    push_docker_image_to_repository(image_tag, username=username, password=password)
+
+    # Parse the APIs in bundle and build and deploy with SAM
+    api_names = [api.name for api in bentobundle.inference_apis]
     template_file_path = _create_aws_lambda_cloudformation_template_file(
-        project_dir="./model-bundle",
+        project_dir=bundle_path,
         api_names=api_names,
         bento_service_name=bentobundle.name,
-        ecr_image_uri=ecr_image_uri,
+        ecr_image_uri=image_tag,
         memory_size=500,
         timeout=60,
     )
@@ -97,21 +122,21 @@ if __name__ == "__main__":
         [
             "deploy",
             "-t",
-            template_file_path.split('/')[-1],
+            template_file_path.split("/")[-1],
             "--stack-name",
             "iris-classifier",
             "--image-repository",
-            ecr_image_uri,
+            image_tag,
             "--capabilities",
             "CAPABILITY_IAM",
             "--region",
             aws_region,
-            "--no-confirm-changeset"
+            "--no-confirm-changeset",
         ],
-        project_dir="./model-bundle",
-        region=aws_region
+        project_dir=bundle_path,
+        region=aws_region,
     )
     if return_code != 0:
         print(return_code, stdout, stderr)
     else:
-        print('Upload success!')
+        print("Upload success!")

@@ -27,4 +27,5 @@ class IrisClassifier(BentoService):
         Another function to have 2 API endpoints.
         TODO: try out other InputHandlers and Models too.
         """
+        print('This is more than another predict!')
         return self.artifacts.model.predict(df)

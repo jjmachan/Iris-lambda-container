@@ -28,6 +28,14 @@ Bento Bundle are
    docker push 213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier
    ```
 
+   This is the manual version but with the `deploy.py` script it becomes easier. 
+   This script takes care of building, tagging and pushing the bento-bundle
+   image and also creates the SAM template file so you can push it to AWS
+   services using SAM deploy.
+   ```
+   python deploy.py <bento-bundle-path>
+   ```
+
 4. Build Cloudformation template. We have to create the template that we will
    use to build infrastructure in AWS (API gateway for all the endpoints and
    Lambda functions). 

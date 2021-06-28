@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 500
+Resources:
+  nextpredict:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: nextpredict
+      PackageType: Image
+      ImageUri: 213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier:latest
+      ImageConfig:
+        Command:
+        - app.nextpredict
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /nextpredict
+            Method: post
+      Environment:
+        Variables:
+          BENTOML_BENTO_SERVICE_NAME: IrisClassifier
+          BENTOML_API_NAME: nextpredict
+  predict:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: predict
+      PackageType: Image
+      ImageUri: 213386773652.dkr.ecr.ap-south-1.amazonaws.com/irisclassifier:latest
+      ImageConfig:
+        Command:
+        - app.predict
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /predict
+            Method: post
+      Environment:
+        Variables:
+          BENTOML_BENTO_SERVICE_NAME: IrisClassifier
+          BENTOML_API_NAME: predict
+Outputs:
+  EndpointUrl:
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+    Description: URL for endpoint
